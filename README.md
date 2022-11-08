@@ -14,6 +14,50 @@ The dictionary comes in two variants:
 - Default dictionary has HTML markup `<i>` and `<b>` to match look of the original book.
 - No-markup version has the same content without any additional formatting tags.
 
+
+```go
+package main
+
+import (
+    "fmt"
+
+    dictionary "github.com/stscoundrel/old-norse-dictionary-go"
+)
+
+func main() {
+  defaultDictionary, defaltErr := dictionary.GetDictionary()
+  noMarkupDictionary, noMarkupErr := dictionary.GetNoMarkupDictionary()
+  
+  // Error handling as you please.
+  if defaltErr != nil {
+    fmt.Println(err)
+  }
+  
+  // Contains 35 000+ DictionaryEntries.
+  for _, entry := range defaultDictionary {
+    fmt.Println(entry.Headword)
+  }
+  
+  // Headwords wont differ in dictionaries.
+  fmt.Println(defaultDictionary[1989].Headword)  // át-frekr
+  fmt.Println(noMarkupDictionary[1989].Headword) // át-frekr
+  
+  // But definitions markup will differ
+  fmt.Println(defaultDictionary[1989].Definitions[0])  // adj. <i>greedy, voracious,</i> Hkv. 2. 41.
+  fmt.Println(noMarkupDictionary[1989].Definitions[0]) // adj. greedy, voracious, Hkv. 2. 41.
+}
+```
+
+The entries are structs of:
+
+```go
+type DictionaryEntry struct {
+  Headword          string
+  Definitions       []string
+}
+
+```
+
 ### About Cleasby & Vigfusson Dictionary
 
 "Icelandic-English" dictionary was started by Richard Cleasby and finished by Gudbrand Vigfusson. It was published in 1874, which leads to there being many public domain versions of the book available.
